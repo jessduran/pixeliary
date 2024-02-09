@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f5f5f5;
+}
+
+.pix-main-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px;
+  max-width: 1536px;
+  gap: 40px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); */
+  grid-template-columns: repeat(32, [col-start] 1fr);
+  grid-auto-rows: 1fr;
+}
+
+.grid::before {
+  content: '';
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.grid > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+/* Just to make the grid visible */
+
+.grid > .grid-item {
+  background: #fff;
+  border: 1px #f5f5f5 solid;
+}
+
+.grid-item.filler {
+  background: rgba(0,0,0,0.1);
+}
+
+.grid-label {
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-left: auto;
+  max-width: 300px;
+}
+
+.legend > li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+}
+
+.legend .square {
+  width: 30px;
+  height: 30px;
+}
+
+.legend .good {
+  background-color: #f1e76f;
+}
+
+.legend .neutral {
+  background-color: #83d6ba;
+}
+
+.legend .stressed {
+  background-color: #6db3da;
+}
+
+.legend .sad {
+  background-color: #a988c3;
+}
+
+.legend .sick {
+  background-color: #f08e8e;
+}
