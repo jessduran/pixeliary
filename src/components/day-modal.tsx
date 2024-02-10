@@ -1,15 +1,23 @@
+import { useState } from 'react';
 import moment from 'moment';
 import Image from 'next/image';
 
+import happy from 'public/happy.svg';
+import chill from 'public/chill.svg';
+import neutral from 'public/neutral.svg';
+import stressed from 'public/stressed.svg';
+import sad from 'public/sad.svg';
+import sick from 'public/sick.svg';
+
+import { Mood } from '@/utils/types';
 import Modal from './modal';
-import { useState } from 'react';
-import { PrismaClient } from '@prisma/client';
+
 
 interface DayModalProps {
   showModal: boolean,
   setShowModal: Function,
   selectedDate: string,
-  moods: InstanceType<typeof PrismaClient.MoodSelect>[]
+  moods: Mood[]
 }
 
 export default function DayModal({ showModal, setShowModal, selectedDate, moods }: DayModalProps) {
@@ -26,6 +34,16 @@ export default function DayModal({ showModal, setShowModal, selectedDate, moods 
     } else if (dateToday.isBefore(date)) {
       return `Set a mood in advance for ${dateStr}`
     }
+  }
+
+  const getImgSrc = (label: string) => {
+    if (label === 'happy') return happy; 
+    if (label === 'chill') return chill;
+    if (label === 'neutral') return neutral;
+    if (label === 'stressed') return stressed;
+    if (label === 'sad') return sad;
+    if (label === 'sick') return sick;
+    return null;
   }
 
   const handleSave = () => {
@@ -48,7 +66,7 @@ export default function DayModal({ showModal, setShowModal, selectedDate, moods 
           >
             <div className="relative w-14 h-14">
               <Image
-                src={`/public/${mood.label}.svg`}
+                src={getImgSrc(mood.label)}
                 alt={mood.alt}
                 fill
                 style={{ objectFit: 'contain' }}

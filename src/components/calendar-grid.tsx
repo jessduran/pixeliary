@@ -3,16 +3,17 @@
 import moment from 'moment';
 import { useState } from 'react';
 import DayModal from './day-modal';
-import { PrismaClient } from '@prisma/client';
+import { Mood, Entry } from '@/utils/types';
 
 interface CalendarGridProps {
-  entries: InstanceType<typeof PrismaClient.EntrySelect>[],
-  moods: InstanceType<typeof PrismaClient.MoodSelect>[]
+  entries: Entry[],
+  moods: Mood[]
 }
 
 export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
   const currentYear = moment().year();
   const months = moment.monthsShort();
+  const today = moment();
 
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
@@ -25,7 +26,7 @@ export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
   const checkDateEntry = (date: string) => {
     const entry = entries.find((entry) => entry.date === date)
     if (entry) {
-      return entry.mood.label
+      return entry.mood?.label
     }
     return ''
   }
@@ -51,14 +52,24 @@ export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
         // check if date is valid
         if (date.isValid()) {
 
-          // check if has entry
-          content.push(
-            <button
-              className={`grid-item ${checkDateEntry(dateStr)}`}
-              key={dateStr}
-              onClick={() => onCellClick(dateStr)}
-            />
-          )
+          // check if date is before today
+          if (today.isBefore(date)) {
+            content.push(
+              <div
+                className="grid-item filler"
+                key={dateStr}
+              />
+            )
+          } else {
+            content.push(
+              <button
+                className={`grid-item ${checkDateEntry(dateStr)}`}
+                key={dateStr}
+                onClick={() => onCellClick(dateStr)}
+              />
+            )
+          }
+
         } else {
           content.push(
             <div

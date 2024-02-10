@@ -1,16 +1,14 @@
 import CalendarGrid from '@/components/calendar-grid';
 import Legend from '@/components/legend';
-import prisma from '@/db';
+import { db } from '@/db';
 
 export default async function Home() {
-  const entries = await prisma.entry.findMany({
+  const entries = await db.entry.findMany({
     include: {
       mood: true
     }
   });
-  const moods = await prisma.mood.findMany();
-
-  console.log(entries);
+  const moods = await db.mood.findMany();
 
   return (
     <>
