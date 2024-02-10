@@ -3,8 +3,14 @@
 import moment from 'moment';
 import { useState } from 'react';
 import DayModal from './day-modal';
+import { PrismaClient } from '@prisma/client';
 
-export default function CalendarGrid() {
+interface CalendarGridProps {
+  entries: InstanceType<typeof PrismaClient.EntrySelect>[],
+  moods: InstanceType<typeof PrismaClient.MoodSelect>[]
+}
+
+export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
   const currentYear = moment().year();
   const months = moment.monthsShort();
 
@@ -14,6 +20,14 @@ export default function CalendarGrid() {
   const onCellClick = (id: string) => {
     setShowModal(true);
     setSelectedDate(id);
+  }
+
+  const checkDateEntry = (date: string) => {
+    const entry = entries.find((entry) => entry.date === date)
+    if (entry) {
+      return entry.mood.label
+    }
+    return ''
   }
 
   const renderSquares = () => {
@@ -36,9 +50,11 @@ export default function CalendarGrid() {
 
         // check if date is valid
         if (date.isValid()) {
+
+          // check if has entry
           content.push(
             <button
-              className="grid-item"
+              className={`grid-item ${checkDateEntry(dateStr)}`}
               key={dateStr}
               onClick={() => onCellClick(dateStr)}
             />
@@ -70,6 +86,7 @@ export default function CalendarGrid() {
         setShowModal={setShowModal}
         showModal={showModal}
         selectedDate={selectedDate}
+        moods={moods}
       />
     </div>
   )

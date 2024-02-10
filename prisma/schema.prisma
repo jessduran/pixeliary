@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Mood {
+  id    Int     @id @default(autoincrement())
+  label String
+  alt   String
+  path  String
+  Entry Entry[]
+}
+
+model Entry {
+  id        Int      @id @default(autoincrement())
+  date      String
+  moodId    Int
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  mood      Mood     @relation(fields: [moodId], references: [id])
+}

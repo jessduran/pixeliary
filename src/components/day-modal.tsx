@@ -2,64 +2,22 @@ import moment from 'moment';
 import Image from 'next/image';
 
 import Modal from './modal';
-import Happy from 'public/happy.svg';
-import Chill from 'public/chill.svg';
-import Neutral from 'public/neutral.svg';
-import Stressed from 'public/stressed.svg';
-import Sad from 'public/sad.svg';
-import Sick from 'public/sick.svg';
+import { useState } from 'react';
+import { PrismaClient } from '@prisma/client';
 
 interface DayModalProps {
   showModal: boolean,
   setShowModal: Function,
-  selectedDate: string
+  selectedDate: string,
+  moods: InstanceType<typeof PrismaClient.MoodSelect>[]
 }
 
-const moods = [
-  {
-    id: 0,
-    label: 'Happy',
-    icon: Happy,
-    alt: 'cheerful smiling emoticon'
-  },
-  {
-    id: 1,
-    label: 'Chill',
-    icon: Chill,
-    alt: 'slightly smiling wearing sunglasses emoticon'
-  },
-  {
-    id: 2,
-    label: 'Neutral',
-    icon: Neutral,
-    alt: 'no mouth emoticon'
-  },
-  {
-    id: 3,
-    label: 'Stressed',
-    icon: Stressed,
-    alt: 'worried open mouth emoticon'
-  },
-  {
-    id: 4,
-    label: 'Sad',
-    icon: Sad,
-    alt: 'frowning upside down smile emoticon'
-  },
-  {
-    id: 5,
-    label: 'Sick',
-    icon: Sick,
-    alt: 'cross-eyed emoticon'
-  },
-]
-
-export default function DayModal({ showModal, setShowModal, selectedDate }: DayModalProps) {
+export default function DayModal({ showModal, setShowModal, selectedDate, moods }: DayModalProps) {
   const dateToday = moment();
   const date = moment(selectedDate, 'YYYY-MM-DD');
   const dateStr = date.format('dddd, MMMM Do');
-
-
+  const [mood, setMood] = useState<number>();
+  
   const renderTitle = () => {
     if (dateToday.isSame(date, 'day')) {
       return 'How are you feeling today?'
@@ -70,9 +28,8 @@ export default function DayModal({ showModal, setShowModal, selectedDate }: DayM
     }
   }
 
-  const onMoodClick = (mood: number) => {
-    // save selected mood
-    console.log(selectedDate, mood);
+  const handleSave = () => {
+    console.log(`save mood ${mood} for date ${selectedDate}`)
   }
 
   return (
@@ -82,17 +39,16 @@ export default function DayModal({ showModal, setShowModal, selectedDate }: DayM
           {renderTitle()}
         </h3>
       </div>
-      <div className="flex justify-around px-20 pb-10 gap-5">
-        
+      <div className="flex justify-around px-20 gap-5"> 
         {moods.map((mood) => (
           <button
             className="flex justify-center flex-col items-center gap-5 p-2 w-12"
-            onClick={() => onMoodClick(mood.id)}
+            onClick={() => setMood(mood.id)}
             key={mood.id}
           >
             <div className="relative w-14 h-14">
               <Image
-                src={mood.icon}
+                src={`/public/${mood.label}.svg`}
                 alt={mood.alt}
                 fill
                 style={{ objectFit: 'contain' }}
@@ -101,6 +57,9 @@ export default function DayModal({ showModal, setShowModal, selectedDate }: DayM
             <p className="text-xs">{mood.label}</p>
           </button>
         ))}
+      </div>
+      <div className="flex justify-center pt-8 pb-5">
+        <button className="px-5 py-2 text-md text-base text-white m-auto bg-cyan-500 hover:bg-cyan-600 rounded-full" onClick={() => handleSave()}>Save</button>
       </div>
     </Modal>
   )
