@@ -63,6 +63,7 @@ body {
   max-width: 300px;
   position: fixed;
   right: 5%;
+  bottom: 3%;
 }
 
 .legend > li {
@@ -77,22 +78,26 @@ body {
   height: 30px;
 }
 
-.legend .good {
-  background-color: #f1e76f;
+.happy, .grid-item.happy {
+  background: #f1e76f;
 }
 
-.legend .neutral {
-  background-color: #83d6ba;
+.chill, .grid-item.chill {
+  background: #83d6ba;
 }
 
-.legend .stressed {
-  background-color: #6db3da;
+.neutral, .grid-item.neutral {
+  background: #6db3da;
 }
 
-.legend .sad {
-  background-color: #a988c3;
+.stressed, .grid-item.stressed {
+  background: #a988c3;
 }
 
-.legend .sick {
-  background-color: #f08e8e;
+.sad, .grid-item.sad {
+  background: #8488ba;
+}
+
+.sick, .grid-item.sick {
+  background: #f08e8e;
 }

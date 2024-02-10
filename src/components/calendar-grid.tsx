@@ -3,10 +3,17 @@
 import moment from 'moment';
 import { useState } from 'react';
 import DayModal from './day-modal';
+import { Mood, Entry } from '@/utils/types';
 
-export default function CalendarGrid() {
+interface CalendarGridProps {
+  entries: Entry[],
+  moods: Mood[]
+}
+
+export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
   const currentYear = moment().year();
   const months = moment.monthsShort();
+  const today = moment();
 
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
@@ -14,6 +21,14 @@ export default function CalendarGrid() {
   const onCellClick = (id: string) => {
     setShowModal(true);
     setSelectedDate(id);
+  }
+
+  const checkDateEntry = (date: string) => {
+    const entry = entries.find((entry) => entry.date === date)
+    if (entry) {
+      return entry.mood?.label
+    }
+    return ''
   }
 
   const renderSquares = () => {
@@ -36,13 +51,25 @@ export default function CalendarGrid() {
 
         // check if date is valid
         if (date.isValid()) {
-          content.push(
-            <button
-              className="grid-item"
-              key={dateStr}
-              onClick={() => onCellClick(dateStr)}
-            />
-          )
+
+          // check if date is before today
+          if (today.isBefore(date)) {
+            content.push(
+              <div
+                className="grid-item filler"
+                key={dateStr}
+              />
+            )
+          } else {
+            content.push(
+              <button
+                className={`grid-item ${checkDateEntry(dateStr)}`}
+                key={dateStr}
+                onClick={() => onCellClick(dateStr)}
+              />
+            )
+          }
+
         } else {
           content.push(
             <div
@@ -59,9 +86,11 @@ export default function CalendarGrid() {
 
   return (
     <div className="pix-main-container">
-      <h1 className="bold text-5xl text-center">
-        A year in pixels {currentYear}
-      </h1>
+      <div className="flex justify-between">
+        <h1 className="bold text-5xl">{currentYear}</h1>
+        <h1 className="bold text-5xl text-right">a year in pixels</h1>
+      </div>
+      
       <div className="grid">
         <div />
         {renderSquares()}
@@ -70,6 +99,7 @@ export default function CalendarGrid() {
         setShowModal={setShowModal}
         showModal={showModal}
         selectedDate={selectedDate}
+        moods={moods}
       />
     </div>
   )

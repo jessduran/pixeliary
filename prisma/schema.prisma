@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Mood {
+  id    Int     @id @default(autoincrement())
+  label String
+  alt   String
+  path  String?
+  Entry Entry[]
+}
+
+model Entry {
+  id        Int       @id @default(autoincrement())
+  date      String
+  mood      Mood?     @relation(fields: [moodId], references: [id])
+  moodId    Int       @default(0)
+  title     String?
+  content   String?
+  createdAt DateTime  @default(now())
+}

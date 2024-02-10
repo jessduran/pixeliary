@@ -1,65 +1,32 @@
+import { useState } from 'react';
 import moment from 'moment';
 import Image from 'next/image';
 
+import happy from 'public/happy.svg';
+import chill from 'public/chill.svg';
+import neutral from 'public/neutral.svg';
+import stressed from 'public/stressed.svg';
+import sad from 'public/sad.svg';
+import sick from 'public/sick.svg';
+
+import { addEntry } from '@/actions';
+import { Mood } from '@/utils/types';
 import Modal from './modal';
-import Happy from 'public/happy.svg';
-import Chill from 'public/chill.svg';
-import Neutral from 'public/neutral.svg';
-import Stressed from 'public/stressed.svg';
-import Sad from 'public/sad.svg';
-import Sick from 'public/sick.svg';
+
 
 interface DayModalProps {
   showModal: boolean,
   setShowModal: Function,
-  selectedDate: string
+  selectedDate: string,
+  moods: Mood[]
 }
 
-const moods = [
-  {
-    id: 0,
-    label: 'Happy',
-    icon: Happy,
-    alt: 'cheerful smiling emoticon'
-  },
-  {
-    id: 1,
-    label: 'Chill',
-    icon: Chill,
-    alt: 'slightly smiling wearing sunglasses emoticon'
-  },
-  {
-    id: 2,
-    label: 'Neutral',
-    icon: Neutral,
-    alt: 'no mouth emoticon'
-  },
-  {
-    id: 3,
-    label: 'Stressed',
-    icon: Stressed,
-    alt: 'worried open mouth emoticon'
-  },
-  {
-    id: 4,
-    label: 'Sad',
-    icon: Sad,
-    alt: 'frowning upside down smile emoticon'
-  },
-  {
-    id: 5,
-    label: 'Sick',
-    icon: Sick,
-    alt: 'cross-eyed emoticon'
-  },
-]
-
-export default function DayModal({ showModal, setShowModal, selectedDate }: DayModalProps) {
+export default function DayModal({ showModal, setShowModal, selectedDate, moods }: DayModalProps) {
   const dateToday = moment();
   const date = moment(selectedDate, 'YYYY-MM-DD');
   const dateStr = date.format('dddd, MMMM Do');
-
-
+  const [activeMood, setActiveMood] = useState<number>(0);
+  
   const renderTitle = () => {
     if (dateToday.isSame(date, 'day')) {
       return 'How are you feeling today?'
@@ -70,9 +37,19 @@ export default function DayModal({ showModal, setShowModal, selectedDate }: DayM
     }
   }
 
-  const onMoodClick = (mood: number) => {
-    // save selected mood
-    console.log(selectedDate, mood);
+  const getImgSrc = (label: string) => {
+    if (label === 'happy') return happy; 
+    if (label === 'chill') return chill;
+    if (label === 'neutral') return neutral;
+    if (label === 'stressed') return stressed;
+    if (label === 'sad') return sad;
+    if (label === 'sick') return sick;
+    return null;
+  }
+
+  const handleSave = () => {
+    addEntry(selectedDate, activeMood);
+    setShowModal(false);
   }
 
   return (
@@ -82,25 +59,32 @@ export default function DayModal({ showModal, setShowModal, selectedDate }: DayM
           {renderTitle()}
         </h3>
       </div>
-      <div className="flex justify-around px-20 pb-10 gap-5">
-        
+      <div className="flex justify-around px-20 gap-2"> 
         {moods.map((mood) => (
-          <button
-            className="flex justify-center flex-col items-center gap-5 p-2 w-12"
-            onClick={() => onMoodClick(mood.id)}
+          <div
             key={mood.id}
+            className={`transition ease-in-out delay-100 py-2 px-4 rounded hover:bg-gray-200 ${activeMood === mood.id ? "bg-gray-200" : "bg-gray-100"}`}
           >
-            <div className="relative w-14 h-14">
-              <Image
-                src={mood.icon}
-                alt={mood.alt}
-                fill
-                style={{ objectFit: 'contain' }}
-              />
-            </div>
-            <p className="text-xs">{mood.label}</p>
-          </button>
+            <button
+              className="flex justify-center flex-col items-center gap-5 p-2 w-12"
+              onClick={() => setActiveMood(mood.id)}
+              key={mood.id}
+            >
+              <div className="relative w-14 h-14">
+                <Image
+                  src={getImgSrc(mood.label)}
+                  alt={mood.alt}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <p className="text-xs">{mood.label}</p>
+            </button>
+          </div>
         ))}
+      </div>
+      <div className="flex justify-center pt-8 pb-5">
+        <button className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 px-5 py-2 text-md text-base text-white m-auto bg-cyan-400 hover:bg-cyan-600 rounded-full" onClick={() => handleSave()}>Save</button>
       </div>
     </Modal>
   )
