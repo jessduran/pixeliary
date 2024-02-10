@@ -17,3 +17,13 @@ export default async function Home() {
     </>
   );
 }
+
+export async function generateStaticParams() {
+  const entries = await db.entry.findMany();
+
+  return entries.map((entry) => {
+    return {
+      id: entry.id.toString()
+    };
+  });
+}

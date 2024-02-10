@@ -86,9 +86,11 @@ export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
 
   return (
     <div className="pix-main-container">
-      <h1 className="bold text-5xl text-center">
-        A year in pixels {currentYear}
-      </h1>
+      <div className="flex justify-between">
+        <h1 className="bold text-5xl">{currentYear}</h1>
+        <h1 className="bold text-5xl text-right">a year in pixels</h1>
+      </div>
+      
       <div className="grid">
         <div />
         {renderSquares()}
