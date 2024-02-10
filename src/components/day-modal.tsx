@@ -24,7 +24,7 @@ interface DayModalProps {
 export default function DayModal({ showModal, setShowModal, selectedDate, moods }: DayModalProps) {
   const dateToday = moment();
   const date = moment(selectedDate, 'YYYY-MM-DD');
-  const dateStr = date.format('dddd, MMMM Do');
+  const dateStr = date.format('MMMM Do (dddd)');
   const [activeMood, setActiveMood] = useState<number>(0);
   
   const renderTitle = () => {
@@ -54,8 +54,8 @@ export default function DayModal({ showModal, setShowModal, selectedDate, moods 
 
   return (
     <Modal isVisible={showModal} onClose={() => setShowModal(false)}>
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-5">
+      <div className="px-6 pt-14">
+        <h3 className="text-lg text-gray-900 mb-5">
           {renderTitle()}
         </h3>
       </div>

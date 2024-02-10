@@ -36,7 +36,7 @@ export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
 
     months.map((month) => {
       content.push(
-        <div className="grid-label" key={month}>{month.charAt(0)}</div>
+        <div className="flex justify-center items-center text-sm" key={month}>{month.charAt(0)}</div>
       )
     })
 
@@ -85,12 +85,7 @@ export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
   }
 
   return (
-    <div className="pix-main-container">
-      <div className="flex justify-between">
-        <h1 className="bold text-5xl">{currentYear}</h1>
-        <h1 className="bold text-5xl text-right">a year in pixels</h1>
-      </div>
-      
+    <div className="flex justify-center flex-col p-8 pb-16 gap-5 mx-auto max-w-3xl">
       <div className="grid">
         <div />
         {renderSquares()}
