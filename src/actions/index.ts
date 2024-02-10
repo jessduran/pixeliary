@@ -1,10 +1,9 @@
 'use server'
 
-import prisma from '@/db';
+import { db } from '@/db';
 import { revalidatePath } from 'next/cache';
 
 export async function addEntry(
-  formState: { message: string },
   date: string,
   mood: number
 ) {
@@ -16,7 +15,7 @@ export async function addEntry(
       };
     }
   
-    const entry = await prisma.entry.create({
+    const entry = await db.entry.create({
       data: {
         date,
         moodId: mood,

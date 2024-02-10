@@ -9,6 +9,7 @@ import stressed from 'public/stressed.svg';
 import sad from 'public/sad.svg';
 import sick from 'public/sick.svg';
 
+import { addEntry } from '@/actions';
 import { Mood } from '@/utils/types';
 import Modal from './modal';
 
@@ -24,7 +25,7 @@ export default function DayModal({ showModal, setShowModal, selectedDate, moods 
   const dateToday = moment();
   const date = moment(selectedDate, 'YYYY-MM-DD');
   const dateStr = date.format('dddd, MMMM Do');
-  const [mood, setMood] = useState<number>();
+  const [activeMood, setActiveMood] = useState<number>(0);
   
   const renderTitle = () => {
     if (dateToday.isSame(date, 'day')) {
@@ -47,7 +48,8 @@ export default function DayModal({ showModal, setShowModal, selectedDate, moods 
   }
 
   const handleSave = () => {
-    console.log(`save mood ${mood} for date ${selectedDate}`)
+    addEntry(selectedDate, activeMood);
+    setShowModal(false);
   }
 
   return (
@@ -57,27 +59,32 @@ export default function DayModal({ showModal, setShowModal, selectedDate, moods 
           {renderTitle()}
         </h3>
       </div>
-      <div className="flex justify-around px-20 gap-5"> 
+      <div className="flex justify-around px-20 gap-2"> 
         {moods.map((mood) => (
-          <button
-            className="flex justify-center flex-col items-center gap-5 p-2 w-12"
-            onClick={() => setMood(mood.id)}
+          <div
             key={mood.id}
+            className={`transition ease-in-out delay-100 py-2 px-4 rounded hover:bg-gray-200 ${activeMood === mood.id ? "bg-gray-200" : "bg-gray-100"}`}
           >
-            <div className="relative w-14 h-14">
-              <Image
-                src={getImgSrc(mood.label)}
-                alt={mood.alt}
-                fill
-                style={{ objectFit: 'contain' }}
-              />
-            </div>
-            <p className="text-xs">{mood.label}</p>
-          </button>
+            <button
+              className="flex justify-center flex-col items-center gap-5 p-2 w-12"
+              onClick={() => setActiveMood(mood.id)}
+              key={mood.id}
+            >
+              <div className="relative w-14 h-14">
+                <Image
+                  src={getImgSrc(mood.label)}
+                  alt={mood.alt}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <p className="text-xs">{mood.label}</p>
+            </button>
+          </div>
         ))}
       </div>
       <div className="flex justify-center pt-8 pb-5">
-        <button className="px-5 py-2 text-md text-base text-white m-auto bg-cyan-500 hover:bg-cyan-600 rounded-full" onClick={() => handleSave()}>Save</button>
+        <button className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 px-5 py-2 text-md text-base text-white m-auto bg-cyan-400 hover:bg-cyan-600 rounded-full" onClick={() => handleSave()}>Save</button>
       </div>
     </Modal>
   )
