@@ -1,12 +1,20 @@
 'use client';
 
 import moment from 'moment';
+import { useState } from 'react';
+import DayModal from './day-modal';
 
 export default function CalendarGrid() {
   const currentYear = moment().year();
   const months = moment.monthsShort();
 
-  const onCellClick = (id: string) => console.log(id);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const onCellClick = (id: string) => {
+    setShowModal(true);
+    setSelectedDate(id);
+  }
 
   const renderSquares = () => {
     let content:any = [];
@@ -58,6 +66,11 @@ export default function CalendarGrid() {
         <div />
         {renderSquares()}
       </div>
+      <DayModal
+        setShowModal={setShowModal}
+        showModal={showModal}
+        selectedDate={selectedDate}
+      />
     </div>
   )
 }
