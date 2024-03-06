@@ -43,7 +43,7 @@ export default function CalendarGrid({ entries, moods }: CalendarGridProps) {
 
     for (let c = 0; c < 31; c ++) {
       content.push(
-        <div className="grid-label" key={c+1}>{c+1}</div>
+        <div className="flex justify-center items-center text-sm" key={c+1}>{c+1}</div>
       )
       months.map((month, idx) => {
         const dateStr = `${currentYear}-${idx+1}-${c+1}`;
