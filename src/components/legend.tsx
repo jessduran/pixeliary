@@ -1,6 +1,6 @@
 export default function Legend() {
   return (
-    <ul className="legend mt-8">
+    <ul className="mt-8 mb-8 block flex-col ml-auto max-w-sm legend lg:flex lg:fixed lg:right-20 lg:bottom-5">
       <li>
         <div className="square happy"></div>
         <p>good / happy</p>

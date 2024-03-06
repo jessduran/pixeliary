@@ -1,4 +1,5 @@
 import CalendarGrid from '@/components/calendar-grid';
+import Header from '@/components/header';
 import Legend from '@/components/legend';
 import { db } from '@/db';
 
@@ -12,8 +13,9 @@ export default async function Home() {
 
   return (
     <>
-      <Legend />
+      <Header />
       <CalendarGrid entries={entries} moods={moods} />
+      <Legend />
     </>
   );
 }
